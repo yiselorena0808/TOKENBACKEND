@@ -1,109 +1,112 @@
 import bcrypt from 'bcryptjs'
-import Usuario from '#models/usuario';
+import Usuario from '#models/usuario'
 import jwt from 'jsonwebtoken'
 
-const SECRET = process.env.JWT_SECRET;
-
+const SECRET = process.env.JWT_SECRET || 'sstrict'
 
 class UsuarioService {
-async register(
+  async register(
+    idTenant: number,
+    idArea: number,
     nombre: string,
     apellido: string,
-    nombre_usuario: string,
-    correo_electronico: string,
+    nombreUsuario: string,
+    correoElectronico: string,
     cargo: string,
     contrasena: string,
     confirmacion: string
   ) {
-    const existente = await Usuario.query()
-      .where('correo_electronico', correo_electronico)
-      .first();
-
-    if (existente) {
-      return { mensaje: 'Correo ya está registrado' };
-    }
-
     if (contrasena !== confirmacion) {
-      return { mensaje: 'Las contraseñas no coinciden' };
+      return { mensaje: 'Las contraseñas no coinciden' }
     }
 
-    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    const hash = await bcrypt.hash(contrasena, 10)
 
     const user = await Usuario.create({
+      idTenant,
+      idArea,
       nombre,
       apellido,
-      nombre_usuario,
-      correo_electronico,
+      nombreUsuario,
+      correoElectronico,
       cargo,
-      contrasena: hashedPassword,
-    });
+      contrasena: hash
+    })
 
-    return { mensaje: 'Registro correcto', user };
+    const token = jwt.sign(
+      {
+        id: user.id,
+        correoElectronico: user.correoElectronico,
+        timestamp: Date.now()
+      },
+      SECRET,
+      { expiresIn: '1h' }
+    )
+
+    return {
+      mensaje: 'Registro correcto',
+      user: await Usuario.query().where('id', user.id).preload('tenant').preload('area').first(),
+      token
+    }
   }
 
-  async login(correo_electronico: string, contrasena: string) {
-  if (!correo_electronico || !contrasena) {
-    throw new Error("El correo y la contraseña son obligatorios");
+  async login(correoElectronico: string, contrasena: string) {
+    if (!correoElectronico || !contrasena) {
+      return { mensaje: 'Campos obligatorios' }
+    }
+
+    const user = await Usuario.query()
+      .where('correo_electronico', correoElectronico)
+      .preload('tenant')
+      .preload('area')
+      .first()
+
+    if (!user) return { mensaje: 'El usuario no existe' }
+
+    const isValid = await bcrypt.compare(contrasena, user.contrasena)
+    if (!isValid) return { mensaje: 'Contraseña incorrecta' }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        correoElectronico: user.correoElectronico,
+        timestamp: Date.now()
+      },
+      SECRET,
+      { expiresIn: '1h' }
+    )
+
+    return { mensaje: 'Login correcto', token, user }
   }
 
-  const user = await Usuario.query()
-    .where('correo_electronico', correo_electronico)
-    .first();
-
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
-
-  const isValid = await bcrypt.compare(contrasena, user.contrasena);
-  if (!isValid) {
-    throw new Error("Contraseña incorrecta");
-  }
-
-  const token = jwt.sign(
-    { id: user.id },
-    SECRET,
-    { expiresIn: '1h' }
-  );
-
-  return { token, user };
-}
-
- 
   async listar() {
-    return await Usuario.query()
+    return await Usuario.query().preload('tenant').preload('area')
   }
 
-  async listarId(id) {
-    return await Usuario.query().where('id', id)
+  async listarId(id: number) {
+    return await Usuario.query().where('id', id).preload('tenant').preload('area').first()
   }
 
-  async actualizar(id, datos) {
-    const usuario = await Usuario.findBy('id', id)
-    if (usuario) {
-      usuario.merge(datos)
-      await usuario.save()
-      return usuario
-    } else {
-      return { error: 'Usuario no encontrado' }
-    }
+  async actualizar(id: number, datos: Partial<Usuario>) {
+    const usuario = await Usuario.find(id)
+    if (!usuario) return { error: 'Usuario no encontrado' }
+
+    usuario.merge(datos)
+    await usuario.save()
+    return await Usuario.query().where('id', id).preload('tenant').preload('area').first()
   }
 
-  async eliminar(id) {
-    const usuario = await Usuario.findBy('id', id)
-    if (usuario) {
-      await usuario.delete()
-      return 'usuario eliminado'
-    } else {
-      return 'usuario no encontrado'
-    }
+  async eliminar(id: number) {
+    const usuario = await Usuario.find(id)
+    if (!usuario) return { mensaje: 'Usuario no encontrado' }
+
+    await usuario.delete()
+    return { mensaje: 'Usuario eliminado' }
   }
 
   async conteo() {
     const usuarios = await Usuario.query()
-    return {
-      total: usuarios.length,
-      usuarios,
-    }
+    return { total: usuarios.length, usuarios }
   }
 }
 

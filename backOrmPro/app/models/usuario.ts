@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Tenant from './tenant.js'
+import Area from './area.js'
 import Reporte from './reporte.js'
 import PublicacionBlog from './publicacion_blog.js'
 import GestionEpp from './gestion_epp.js'
@@ -17,11 +19,11 @@ export default class Usuario extends BaseModel {
   @column()
   declare apellido: string
 
-  @column()
-  declare nombre_usuario: string
+  @column({ columnName: 'nombre_usuario' })
+  declare nombreUsuario: string
 
-  @column()
-  declare correo_electronico: string
+  @column({ columnName: 'correo_electronico' })
+  declare correoElectronico: string
 
   @column()
   declare cargo: string
@@ -29,25 +31,37 @@ export default class Usuario extends BaseModel {
   @column()
   declare contrasena: string
 
+  @column({ columnName: 'id_tenant' })
+  declare idTenant: number
+
+  @column({ columnName: 'id_area' })
+  declare idArea: number
+
+  @belongsTo(() => Tenant, { foreignKey: 'idTenant' })
+  declare tenant: BelongsTo<typeof Tenant>
+
+  @belongsTo(() => Area, { foreignKey: 'idArea' })
+  declare area: BelongsTo<typeof Area>
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  // Relaciones con otras entidades
   @hasMany(() => GestionEpp)
-  declare gestion_epp: HasMany<typeof GestionEpp>
+  declare gestionEpp: HasMany<typeof GestionEpp>
 
   @hasMany(() => PublicacionBlog)
-  declare publicacion_blogs: HasMany<typeof PublicacionBlog>
+  declare publicacionBlogs: HasMany<typeof PublicacionBlog>
 
   @hasMany(() => Reporte)
   declare reportes: HasMany<typeof Reporte>
 
   @hasMany(() => ListaChequeo)
-  declare lista_chequeos: HasMany<typeof ListaChequeo>
+  declare listaChequeos: HasMany<typeof ListaChequeo>
 
   @hasMany(() => ActividadLudica)
-  declare actividades_ludicas: HasMany<typeof ActividadLudica>
-
+  declare actividadesLudicas: HasMany<typeof ActividadLudica>
 }
