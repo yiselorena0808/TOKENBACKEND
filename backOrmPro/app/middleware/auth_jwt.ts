@@ -1,7 +1,7 @@
 import Jwt from 'jsonwebtoken';
 import type { HttpContext} from '@adonisjs/core/http'
 
-/*const SECRET=process.env.jwt_secret || 'sstrict';
+const SECRET=process.env.jwt_secret || 'sstrict';
 export default class AuthJwt{
     async handle({request,response}: HttpContext, next:any){
         const authheader = request.header('Authorization');
@@ -21,4 +21,4 @@ export default class AuthJwt{
             }
         }
     }
-}*/
+}
