@@ -3,7 +3,7 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Usuario from './usuario.js'
 import { DateTime } from 'luxon'
-import Tenant from './empresa.js'
+import Empresa from './empresa.js'
 
 export default class Area extends BaseModel {
   @column({ isPrimary: true })
@@ -41,9 +41,9 @@ export default class Area extends BaseModel {
   })
     declare usuarios: HasMany<typeof Usuario>
 
-  @belongsTo(() => Tenant, {
+  @belongsTo(() => Empresa, {
     foreignKey: 'id_empresa',
   })
-    declare empresa: BelongsTo<typeof Tenant>
+    declare empresa: BelongsTo<typeof Empresa>
 
 }
