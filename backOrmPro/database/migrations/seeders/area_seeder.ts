@@ -1,9 +1,9 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
-import Tenat from '../../app/models/tenat.js'
+import Area from '../../../app/models/area.js'
 
 export default class extends BaseSeeder {
   async run() {
-    await Tenat.createMany([
+    await Area.createMany([
       {
         nombre_area: 'area 1',
         codigo_area: 'area1_code',

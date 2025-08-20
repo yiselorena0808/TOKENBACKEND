@@ -11,7 +11,7 @@ export default class TenantsController {
   }
 
   async listarTenants({ response }: HttpContext) {
-    const tenants = await tenantService.listarTenants()
+    const tenants = await tenantService.listarTenant()
     return response.json(tenants)
   }
 }

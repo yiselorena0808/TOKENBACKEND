@@ -1,15 +1,15 @@
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import Tenant from './tenant.js'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Usuario from './usuario.js'
+import { DateTime } from 'luxon'
+import Tenant from './empresa.js'
 
 export default class Area extends BaseModel {
   @column({ isPrimary: true })
   declare id_area: number
-
-  @column()
-  declare id_tenant: number
-
-  @column()
+  
+   @column()
   declare nombre_area: string
 
   @column()
@@ -18,8 +18,32 @@ export default class Area extends BaseModel {
   @column()
   declare descripcion: string | null
 
-  @belongsTo(() => Tenant, {
-    foreignKey: 'id_tenant',
+  @column()
+  declare id_empresa: number
+
+  @column()
+  declare estado: boolean
+
+  @column()
+  declare esquema: string | null
+
+  @column()
+  declare alias: string | null
+
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
+
+  @hasMany(() => Usuario, {
+    foreignKey: 'id_area'
   })
-  declare tenant: BelongsTo<typeof Tenant>
+    declare usuarios: HasMany<typeof Usuario>
+
+  @belongsTo(() => Tenant, {
+    foreignKey: 'id_empresa',
+  })
+    declare empresa: BelongsTo<typeof Tenant>
+
 }

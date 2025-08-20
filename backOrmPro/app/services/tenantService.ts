@@ -1,4 +1,4 @@
-import Tenat from '../models/tenant.js'
+import Tenat from '../models/empresa.js'
 import  TenantStorage  from './TenantStorage.js'
 import type { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 
@@ -13,15 +13,20 @@ export default class TenatService {
     return Tenat.query().where('id_tenat', tenantId)
   }
 
-  public async getMyTenant() {
+  public async listarTenant() {
     return await this.query().first()
   }
 
-  public async updateMyTenant(data: Partial<Tenat>) {
+  public async actualizarTenant(data: Partial<Tenat>) {
     const tenant = await this.query().first()
     if (!tenant) return null
     tenant.merge(data)
     await tenant.save()
+    return tenant
+  }
+
+  public async crearTenant(data: Partial<Tenat>) {
+    const tenant = await Tenat.create(data)
     return tenant
   }
 }
