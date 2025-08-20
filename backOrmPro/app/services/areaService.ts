@@ -6,6 +6,6 @@ export default class AreaService {
   }
 
   async listarAreas() {
-    return await Area.query().preload('empresa')
+    return await Area.query().preload('empresa'as any)
   }
 }
