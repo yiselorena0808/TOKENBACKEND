@@ -2,14 +2,14 @@
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
     "target": "ES6",
-    "module": "node16",
+    "module": "nodenext",
     "rootDir": "./",
     "outDir": "./build",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-      "moduleResolution": "node16"
+      "moduleResolution": "nodenext"
   },
   "include": ["./**/*.ts"],
   "exclude": [
