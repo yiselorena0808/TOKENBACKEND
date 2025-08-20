@@ -1,10 +1,11 @@
 import BlogService from '#services/PublicacionBlogService'
 import { messages } from '@vinejs/vine/defaults'
+import type { HttpContext} from '@adonisjs/core/http'
 
 const blogService = new BlogService()
 
 class BlogController {
-  async crearBlog({ request, response }) {
+  async crearBlog({ request, response }: HttpContext) {
     try {
       const datos = request.body()
       const nueva = await blogService.crear(datos)
@@ -14,7 +15,7 @@ class BlogController {
     }
   }
 
-  async listarBlog({ response }) {
+  async listarBlog({ response }: HttpContext) {
     try {
       const lista = await blogService.listar()
       return response.json({ msj: 'listado de publicaciones', datos: lista })

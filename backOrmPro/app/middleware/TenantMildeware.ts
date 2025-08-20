@@ -1,15 +1,15 @@
-import { AsyncLocalStorage } from 'async_hooks'
+import  {Request, Response, NextFunction} from 'express';
+import TenantStorage from '../services/TenantStorage.js';
 
-type EmpresaStore = {
-  empresaId?: number
-}
+export function tenantMiddleware(req: Request, _res: Response, next: NextFunction) {
+    const tenantId = Number(req.headers['x-area-id']) || 0;
+    const empresaId = Number(req.headers['x-empresa-id']) || 0;
 
-export const empresaStorage = new AsyncLocalStorage<EmpresaStore>()
+    TenantStorage.run(tenantId, () => {
+        next();
+    });
 
-export function setEmpresaId(id: number) {
-  empresaStorage.enterWith({ empresaId: id })
-}
-
-export function getEmpresaId(): number | undefined {
-  return empresaStorage.getStore()?.empresaId
+    TenantStorage.run(empresaId, () => {
+        next();
+    });
 }

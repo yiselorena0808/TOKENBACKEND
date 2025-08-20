@@ -1,10 +1,11 @@
 import ListaChequeoService from '#services/ListaChequeoService'
 import { messages } from '@vinejs/vine/defaults'
+import type { HttpContext} from '@adonisjs/core/http'
 
 const listaChequeoService = new ListaChequeoService()
 
 class ListaChequeoController {
-  async crearLista({ request, response }) {
+  async crearLista({ request, response }: HttpContext) {
     try {
       const datos = request.body()
       const nueva = await listaChequeoService.crear(datos)
@@ -14,7 +15,7 @@ class ListaChequeoController {
     }
   }
 
-  async listarListas({ response }) {
+  async listarListas({ response }: HttpContext) {
     try {
       const listas = await listaChequeoService.listar()
       return response.json({ msj: 'listado', datos: listas })

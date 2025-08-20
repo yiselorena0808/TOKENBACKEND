@@ -1,7 +1,7 @@
 import GestionEpp from '#models/gestion_epp'
 
 class GestionEppService {
-  async crear(datos) {
+  async crear(datos: any) {
     return await GestionEpp.create(datos)
   }
 
@@ -9,11 +9,11 @@ class GestionEppService {
     return await GestionEpp.query()
   }
 
-  async listarId(id) {
+  async listarId(id: number) {
     return await GestionEpp.query().where('id', id)
   }
 
-  async actualizar(id, datos) {
+  async actualizar(id:any, datos: any) {
     const gestion = await GestionEpp.findBy('id', id)
     if (gestion) {
       gestion.merge(datos)
@@ -24,7 +24,7 @@ class GestionEppService {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(id: any) {
     const gestion = await GestionEpp.findBy('id', id)
     if (gestion) {
       await gestion.delete()

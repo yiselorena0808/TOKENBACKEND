@@ -14,7 +14,7 @@ class UsuarioService {
     correoElectronico: string,
     cargo: string,
     contrasena: string,
-    confirmacion: string
+    confirmacion: string,
   ) {
     if (contrasena !== confirmacion) {
       return { mensaje: 'Las contraseñas no coinciden' }

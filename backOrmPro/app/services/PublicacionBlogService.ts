@@ -1,7 +1,7 @@
 import PublicacionBlog from '#models/publicacion_blog'
 
 class PublicacionBlogService {
-  async crear(datos) {
+  async crear(datos: any) {
     return await PublicacionBlog.create(datos)
   }
 
@@ -9,11 +9,11 @@ class PublicacionBlogService {
     return await PublicacionBlog.query()
   }
 
-  async listarId(id) {
+  async listarId(id: number) {
     return await PublicacionBlog.query().where('id', id)
   }
 
-  async actualizar(id, datos) {
+  async actualizar(id:number, datos: any) {
     const blog = await PublicacionBlog.findBy('id', id)
     if (blog) {
       blog.merge(datos)
@@ -24,7 +24,7 @@ class PublicacionBlogService {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(id: number) {
     const blog = await PublicacionBlog.findBy('id', id)
     if (blog) {
       await blog.delete()

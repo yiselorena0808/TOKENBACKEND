@@ -1,10 +1,11 @@
 import ReporteService from '#services/ReporteService'
 import { messages } from '@vinejs/vine/defaults'
+import type { HttpContext} from '@adonisjs/core/http'
 
 const reporteService = new ReporteService()
 
 class ReportesController {
-  async crearReporte({ request, response }) {
+  async crearReporte({ request, response }: HttpContext) {
     try {
       const datos = request.body()
       const nuevo = await reporteService.crear(datos)
@@ -14,7 +15,7 @@ class ReportesController {
     }
   }
 
-  async listarReportes({ response }) {
+  async listarReportes({ response }: HttpContext) {
     try {
       const lista = await reporteService.listar()
       return response.json({ msj: 'lista de reportes', datos: lista })
@@ -23,7 +24,7 @@ class ReportesController {
     }
   }
 
-  async listarReporteId({ params, response }) {
+  async listarReporteId({ params, response }: HttpContext) {
     try {
       const uno = await reporteService.listarId(params.id)
       return response.json({ msj: 'reporte encontrado', datos: uno })
@@ -32,7 +33,7 @@ class ReportesController {
     }
   }
 
-  async actualizarReporte({ params, request, response }) {
+  async actualizarReporte({ params, request, response }: HttpContext) {
     try {
       const actualizado = await reporteService.actualizar(params.id, request.body())
       return response.json({ msj: 'reporte actualizado', datos: actualizado })
@@ -41,7 +42,7 @@ class ReportesController {
     }
   }
 
-  async eliminarReporte({ params, response }) {
+  async eliminarReporte({ params, response }: HttpContext) {
     try {
       const resp = await reporteService.eliminar(params.id)
       return response.json({ msj: resp })
@@ -50,7 +51,7 @@ class ReportesController {
     }
   }
 
-  async conteoReportes({ response }) {
+  async conteoReportes({ response }:  HttpContext) {
     try {
       const resultado = await reporteService.conteo()
       return response.json({ msj: 'conteo realizado', datos: resultado })

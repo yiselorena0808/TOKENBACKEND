@@ -1,10 +1,11 @@
 import ActividadLudicaService from '#services/ActividadLudicaService'
 import { messages } from '@vinejs/vine/defaults'
+import type { HttpContext} from '@adonisjs/core/http'
 
 const actividadLudicaService = new ActividadLudicaService()
 
 class ActividadesLudicasController {
-  async crearActividad({ request, response }) {
+  async crearActividad({ request, response }: HttpContext) {
     try {
       const datos = request.body()
       const nueva = await actividadLudicaService.crear(datos)
@@ -14,7 +15,7 @@ class ActividadesLudicasController {
     }
   }
 
-  async listarActividades({ response }) {
+  async listarActividades({ response }: HttpContext) {
     try {
       const lista = await actividadLudicaService.listar()
       return response.json({ msj: 'listado de actividades', datos: lista })

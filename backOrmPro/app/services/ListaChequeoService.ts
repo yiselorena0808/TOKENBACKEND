@@ -1,7 +1,7 @@
 import ListaChequeo from '#models/lista_chequeo'
 
 class ListaChequeoService {
-  async crear(datos) {
+  async crear(datos: any) {
     return await ListaChequeo.create(datos)
   }
 
@@ -9,11 +9,11 @@ class ListaChequeoService {
     return await ListaChequeo.query()
   }
 
-  async listarId(id) {
+  async listarId(id: number) {
     return await ListaChequeo.query().where('id', id)
   }
 
-  async actualizar(id, datos) {
+  async actualizar(id:number, datos: any) {
     const lista = await ListaChequeo.findBy('id', id)
     if (lista) {
       lista.merge(datos)
@@ -24,7 +24,7 @@ class ListaChequeoService {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(id: number) {
     const lista = await ListaChequeo.findBy('id', id)
     if (lista) {
       await lista.delete()
