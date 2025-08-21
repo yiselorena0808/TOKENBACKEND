@@ -6,6 +6,8 @@ import { DateTime } from 'luxon'
 import Empresa from './empresa.js'
 
 export default class Area extends BaseModel {
+ public static table = 'area'
+
   @column({ isPrimary: true })
   declare id_area: number
   
