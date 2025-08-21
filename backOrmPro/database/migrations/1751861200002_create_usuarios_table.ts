@@ -8,11 +8,11 @@ export default class Usuarios extends BaseSchema {
       table.increments('id')
 
       table
-        .integer('id_tenant')
+        .integer('id_empresa')
         .unsigned()
         .notNullable()
-        .references('id_tenant')
-        .inTable('tenants')
+        .references('id_empresa')
+        .inTable('empresas')
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
 
