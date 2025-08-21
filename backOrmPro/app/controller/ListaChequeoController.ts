@@ -23,6 +23,25 @@ class ListaChequeoController {
       return response.json({ error: error.message, messages })
     }
   }
+  async actualizarLista({request,response,params}){
+    try {
+      const id = params.id
+      const datos = request.body()
+      const listaActualizada = await listaChequeoService.actualizar(id, datos)
+      return response.json({ msj: 'lista actualizada', datos: listaActualizada })
+    } catch (error) {
+      return response.json({ error: error.message, messages })
+    }
+  }
+  async eliminarLista({ params, response }: HttpContext) {
+    try {
+      const id = params.id
+      await listaChequeoService.eliminar(id)
+      return response.json({ msj: 'lista eliminada' })
+    } catch (error) {
+      return response.json({ error: error.message, messages })
+    }
+  }
 }
 
 export default ListaChequeoController

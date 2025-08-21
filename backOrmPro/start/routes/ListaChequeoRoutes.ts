@@ -7,3 +7,5 @@ const lista = new ListaChequeoController()
 
 Route.post('/crearListaChequeo', lista.crearLista)//.use(authJwt.handle.bind(authJwt))
 Route.get('/listarListasChequeo', lista.listarListas)//.use(authJwt.handle.bind(authJwt))
+oute.put('/actualizarListaChequeo/:id', lista.actualizarLista)//.use(authJwt.handle.bind(authJwt))
+Route.delete('/eliminarListaChequeo/:id', lista.eliminarLista)//.use(authJwt.handle.bind(authJwt))
