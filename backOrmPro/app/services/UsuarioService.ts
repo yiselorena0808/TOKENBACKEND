@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'sstrict'
 
 class UsuarioService {
   async register(
-    idTenant: number,
+    idEmpresa: number,
     idArea: number,
     nombre: string,
     apellido: string,
@@ -23,7 +23,7 @@ class UsuarioService {
     const hash = await bcrypt.hash(contrasena, 10)
 
     const user = await Usuario.create({
-      idTenant,
+      idEmpresa,
       idArea,
       nombre,
       apellido,
@@ -45,7 +45,7 @@ class UsuarioService {
 
     return {
       mensaje: 'Registro correcto',
-      user: await Usuario.query().where('id', user.id).preload('tenant').preload('area').first(),
+      user: await Usuario.query().where('id', user.id).preload('empresa').preload('area').first(),
       token
     }
   }
@@ -57,7 +57,7 @@ class UsuarioService {
 
     const user = await Usuario.query()
       .where('correo_electronico', correoElectronico)
-      .preload('tenant')
+      .preload('empresa')
       .preload('area')
       .first()
 
@@ -80,11 +80,11 @@ class UsuarioService {
   }
 
   async listar() {
-    return await Usuario.query().preload('tenant').preload('area')
+    return await Usuario.query().preload('empresa').preload('area')
   }
 
   async listarId(id: number) {
-    return await Usuario.query().where('id', id).preload('tenant').preload('area').first()
+    return await Usuario.query().where('id', id).preload('empresa').preload('area').first()
   }
 
   async actualizar(id: number, datos: Partial<Usuario>) {
@@ -93,7 +93,7 @@ class UsuarioService {
 
     usuario.merge(datos)
     await usuario.save()
-    return await Usuario.query().where('id', id).preload('tenant').preload('area').first()
+    return await Usuario.query().where('id', id).preload('empresa').preload('area').first()
   }
 
   async eliminar(id: number) {

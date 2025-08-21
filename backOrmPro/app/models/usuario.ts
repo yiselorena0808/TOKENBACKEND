@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-import Tenant from './empresa.js'
+import Empresa from './empresa.js'
 import Area from './area.js'
 import Reporte from './reporte.js'
 import PublicacionBlog from './publicacion_blog.js'
@@ -31,14 +31,14 @@ export default class Usuario extends BaseModel {
   @column()
   declare contrasena: string
 
-  @column({ columnName: 'id_tenant' })
-  declare idTenant: number
+  @column({ columnName: 'id_empresa' })
+  declare idEmpresa: number
 
   @column({ columnName: 'id_area' })
   declare idArea: number
 
-  @belongsTo(() => Tenant, { foreignKey: 'idTenant' })
-  declare tenant: BelongsTo<typeof Tenant>
+  @belongsTo(() => Empresa, { foreignKey: 'idEmpresa' })
+  declare empresa: BelongsTo<typeof Empresa>
 
   @belongsTo(() => Area, { foreignKey: 'idArea' })
   declare area: BelongsTo<typeof Area>
