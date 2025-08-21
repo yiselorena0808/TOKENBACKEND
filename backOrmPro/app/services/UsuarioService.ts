@@ -10,8 +10,8 @@ class UsuarioService {
     id_area: number,
     nombre: string,
     apellido: string,
-    nombreUsuario: string,
-    correoElectronico: string,
+    nombre_usuario: string,
+    correo_electronico: string,
     cargo: string,
     contrasena: string,
     confirmacion: string,
@@ -27,8 +27,8 @@ class UsuarioService {
       id_area,
       nombre,
       apellido,
-      nombreUsuario,
-      correoElectronico,
+      nombre_usuario,
+      correo_electronico,
       cargo,
       contrasena: hash
     })
@@ -36,7 +36,7 @@ class UsuarioService {
     const token = jwt.sign(
       {
         id: user.id,
-        correoElectronico: user.correoElectronico,
+        correoElectronico: user.correo_electronico,
         timestamp: Date.now()
       },
       SECRET,
@@ -69,7 +69,7 @@ class UsuarioService {
     const token = jwt.sign(
       {
         id: user.id,
-        correoElectronico: user.correoElectronico,
+        correoElectronico: user.correo_electronico,
         timestamp: Date.now()
       },
       SECRET,

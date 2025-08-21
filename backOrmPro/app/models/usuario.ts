@@ -20,10 +20,10 @@ export default class Usuario extends BaseModel {
   declare apellido: string
 
   @column({ columnName: 'nombre_usuario' })
-  declare nombreUsuario: string
+  declare nombre_usuario: string
 
   @column({ columnName: 'correo_electronico' })
-  declare correoElectronico: string
+  declare correo_electronico: string
 
   @column()
   declare cargo: string
