@@ -43,11 +43,11 @@ export default class UsuarioController {
   }
 
   async login({ request, response }: HttpContext) {
-    const { correoElectronico, contrasena } = request.only([
-      'correoElectronico',
+    const { correo_electronico, contrasena } = request.only([
+      'correo_electronico',
       'contrasena'
     ])
-    const resultado = await usuarioService.login(correoElectronico, contrasena)
+    const resultado = await usuarioService.login(correo_electronico, contrasena)
     return response.json(resultado)
   }
 
