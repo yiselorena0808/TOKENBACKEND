@@ -6,34 +6,34 @@ const usuarioService = new UsuarioService()
 export default class UsuarioController {
   async register({ request, response }: HttpContext) {
     const {
-      idTenant,
-      idArea,
+      id_empresa,
+      id_area,
       nombre,
       apellido,
-      nombreUsuario,
-      correoElectronico,
+      nombre_usuario,
+      correo_electronico,
       cargo,
       contrasena,
       confirmacion
     } = request.only([
-      'idTenant',
-      'idArea',
+      'id_empresa',
+      'id_area',
       'nombre',
       'apellido',
-      'nombreUsuario',
-      'correoElectronico',
+      'nombre_usuario',
+      'correo_electronico',
       'cargo',
       'contrasena',
       'confirmacion'
     ])
 
     const resultado = await usuarioService.register(
-      idTenant,
-      idArea,
+      id_empresa,
+      id_area,
       nombre,
       apellido,
-      nombreUsuario,
-      correoElectronico,
+      nombre_usuario,
+      correo_electronico,
       cargo,
       contrasena,
       confirmacion
