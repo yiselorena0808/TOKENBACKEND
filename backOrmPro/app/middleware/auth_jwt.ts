@@ -1,4 +1,4 @@
-import Jwt from 'jsonwebtoken';
+/*import Jwt from 'jsonwebtoken';
 import type { HttpContext} from '@adonisjs/core/http'
 
 const SECRET=process.env.jwt_secret || 'sstrict';
@@ -21,4 +21,4 @@ export default class AuthJwt{
             }
         }
     }
-}
+}*/
