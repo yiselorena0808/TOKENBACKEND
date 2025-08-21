@@ -16,7 +16,14 @@ export default class Usuarios extends BaseSchema {
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
 
-      table.integer('id_area').unsigned().notNullable().references('id_area').inTable('areas').onDelete('CASCADE').onUpdate('CASCADE')
+      table
+        .integer('id_area')
+        .unsigned()
+        .notNullable()
+        .references('id_area')
+        .inTable('area')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
 
       table.string('nombre', 100).notNullable()
       table.string('apellido', 100).notNullable()
