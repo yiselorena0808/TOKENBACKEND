@@ -23,6 +23,36 @@ class ActividadesLudicasController {
       return response.json({ error: error.message, messages })
     }
   }
+
+  async listarIdActividad({ params, response }: HttpContext) {
+    try {
+      const id = params.id
+      const actividad = await actividadLudicaService.listarId(id)
+      return response.json({ msj: 'actividad encontrada', datos: actividad })
+    } catch (error) {
+      return response.json({ error: error.message, messages })
+    }
+  }
+
+  async eliminarActividad({ params, response }: HttpContext) {
+    try {
+      const id = params.id
+      await actividadLudicaService.eliminar(id)
+      return response.json({ msj: 'actividad eliminada' })
+    } catch (error) {
+      return response.json({ error: error.message, messages })
+    }}
+
+    async actualzarActividad({request,response,params}: HttpContext) {  
+      try {
+        const id = params.id
+        const datos = request.body()
+        const actividadActualizada = await actividadLudicaService.actualizar(id, datos)
+        return response.json({ msj: 'actividad actualizada', datos: actividadActualizada })
+      } catch (error) {
+        return response.json({ error: error.message, messages })
+      }
+    }
 }
 
 export default ActividadesLudicasController

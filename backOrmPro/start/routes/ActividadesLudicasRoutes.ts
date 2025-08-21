@@ -7,3 +7,6 @@ const actividad = new ActividadesLudicasController()
 
 Route.post('/crearActividadLudica', actividad.crearActividad)//.use(authJwt.handle.bind(authJwt))
 Route.get('/listarActividadesLudicas', actividad.listarActividades)//.use(authJwt.handle.bind(authJwt))
+Route.get('/idActividadLudica/:id', actividad.listarIdActividad)//.use(authJwt.handle.bind(authJwt))
+Route.delete('/eliminarActividadLudica/:id', actividad.eliminarActividad)//.use(authJwt.handle.bind(authJwt))
+Route.put('/actualizarActividadLudica/:id', actividad.actualzarActividad)//.use(authJwt.handle.bind(authJwt))

@@ -23,7 +23,7 @@ class ListaChequeoController {
       return response.json({ error: error.message, messages })
     }
   }
-  async actualizarLista({request,response,params}){
+  async actualizarLista({request,response,params}: HttpContext) {
     try {
       const id = params.id
       const datos = request.body()
