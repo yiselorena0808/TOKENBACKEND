@@ -6,8 +6,8 @@ const SECRET = process.env.JWT_SECRET || 'sstrict'
 
 class UsuarioService {
   async register(
-    idEmpresa: number,
-    idArea: number,
+    id_empresa: number,
+    id_area: number,
     nombre: string,
     apellido: string,
     nombreUsuario: string,
@@ -23,8 +23,8 @@ class UsuarioService {
     const hash = await bcrypt.hash(contrasena, 10)
 
     const user = await Usuario.create({
-      idEmpresa,
-      idArea,
+      id_empresa,
+      id_area,
       nombre,
       apellido,
       nombreUsuario,

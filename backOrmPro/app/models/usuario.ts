@@ -32,15 +32,15 @@ export default class Usuario extends BaseModel {
   declare contrasena: string
 
   @column({ columnName: 'id_empresa' })
-  declare idEmpresa: number
+  declare id_empresa: number
 
   @column({ columnName: 'id_area' })
-  declare idArea: number
+  declare id_area: number
 
-  @belongsTo(() => Empresa, { foreignKey: 'idEmpresa' })
+  @belongsTo(() => Empresa, { foreignKey: 'id_empresa' })
   declare empresa: BelongsTo<typeof Empresa>
 
-  @belongsTo(() => Area, { foreignKey: 'idArea' })
+  @belongsTo(() => Area, { foreignKey: 'id_area' })
   declare area: BelongsTo<typeof Area>
 
   @column.dateTime({ autoCreate: true })
