@@ -13,16 +13,17 @@ class ListaChequeoService {
     return await ListaChequeo.query().where('id', id)
   }
 
-  async actualizar(id:number, datos: any) {
-    const lista = await ListaChequeo.findBy('id', id)
-    if (lista) {
-      lista.merge(datos)
-      await lista.save()
-      return lista
-    } else {
-      return { error: 'Lista no encontrada' }
-    }
+ async actualizar(id: number, datos: any) {
+  const lista = await ListaChequeo.find(id) // busca por primary key
+  if (lista) {
+    lista.merge(datos)
+    await lista.save()
+    return lista
+  } else {
+    return { error: 'Lista no encontrada' }
   }
+}
+ 
 
   async eliminar(id: number) {
     const lista = await ListaChequeo.findBy('id', id)
