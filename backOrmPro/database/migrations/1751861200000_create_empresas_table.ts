@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.string('direccion')
       table.string('NIT')
       table.boolean('estado').defaultTo(true)
+      table.string('esquema').nullable()
+      table.string('alias').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
