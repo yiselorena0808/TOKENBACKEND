@@ -13,3 +13,5 @@ import './routes/ActividadesLudicasRoutes.js'
 import './routes/AreaRoutes.js'
 
 import './routes/TenantRoutes.js'
+
+import './routes/EmpresaRoutes.js'
