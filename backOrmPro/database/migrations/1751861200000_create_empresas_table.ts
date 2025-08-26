@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id_empresa').primary()
       table.string('nombre')
       table.string('direccion')
-      table.string('NIT')
+      table.string('nit')
       table.boolean('estado').defaultTo(true)
       table.string('esquema').nullable()
       table.string('alias').nullable()

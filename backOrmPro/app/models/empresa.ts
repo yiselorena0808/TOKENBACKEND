@@ -12,7 +12,7 @@ export default class Empresa extends BaseModel {
   declare direccion: string
 
   @column()
-  declare NIT:string
+  declare nit:string
 
   @column()
   declare estado:boolean
