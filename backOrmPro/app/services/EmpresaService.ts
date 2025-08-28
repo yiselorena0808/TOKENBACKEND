@@ -25,7 +25,7 @@ class EmpresaService {
   }
 
   async eliminar(id: any) {
-    const empresa = await Empresa.findBy("id", id);
+    const empresa = await Empresa.findBy("id_empresa", id);
     if (empresa) {
       await empresa.delete();
       return "Empresa eliminada";
