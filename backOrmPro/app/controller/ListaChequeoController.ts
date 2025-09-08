@@ -9,7 +9,8 @@ private service = new ListaChequeoService()
 
   async crearLista({ request, response }: HttpContext) {
     try {
-      const datos = request.only(['id_usuario','usuario_nombre', 'fecha', 'hora', 'modelo', 'marca', 'soat', 'tecnico', 'kilometraje'])
+      const datos = request.only(['id_usuario','usuario_nombre', 'fecha', 'hora', 'modelo', 'marca', 'soat', 'tecnico', 'kilometraje']) as any
+      datos.id_empresa = (request as any).empresaId
       const empresaId = (request as any).empresaId
       return this.service.crear(empresaId, datos)
     } catch (error) {

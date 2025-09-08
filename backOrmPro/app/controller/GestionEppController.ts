@@ -8,7 +8,9 @@ class GestionController {
   async crearGestion({ request, response }: HttpContext) {
     try {
       const empresaId = (request as any).empresaId
-      const datos = request.only(['id_usuario', 'nombre', 'apellido', 'cedula', 'cargo', 'productos', 'cantidad', 'importancia', 'estado'])
+      const datos = request.only(['id_usuario', 'nombre', 'apellido', 'cedula', 'cargo', 'productos', 'cantidad', 'importancia', 'estado']) as any
+      datos.id_empresa = (request as any).empresaId
+      datos.id_area = (request as any).areaId
       const nueva = await gestionService.crear(datos, empresaId)
       return response.json({ msj: 'gestion creada', datos: nueva })
     } catch (error) {

@@ -9,7 +9,8 @@ class ActividadesLudicasController {
   async crearActividad({ request, response }: HttpContext) {
     try {
       const empresaId = (request as any).empresaId
-      const datos = request.only(['nombre_usuario', 'nombre_actividad', 'fecha_actividad', 'imagen_video', 'archivo_adjunto', 'descripcion'])
+      const datos = request.only(['nombre_usuario', 'nombre_actividad', 'fecha_actividad', 'imagen_video', 'archivo_adjunto', 'descripcion']) as any
+      datos.id_empresa = (request as any).empresaId
       return this.service.crear(empresaId, datos)
     } catch (error) {
       return response.json({ error: error.message, messages })

@@ -9,7 +9,8 @@ class ReportesController {
 
   async crearReporte({ request, response }: HttpContext) {
     try {
-      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])
+      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])as any
+      datos.id_empresa = (request as any).empresaId
       const empresaId = (request as any).empresaId
       return reporteService.crear(empresaId, datos)
     } catch (error) {

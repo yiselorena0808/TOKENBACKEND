@@ -7,7 +7,8 @@ const blogService = new BlogService()
 class BlogController {
   async crearBlog({ request, response }: HttpContext) {
     try {
-      const datos = request.only(['nombre_usuario', 'titulo', 'fecha_actividad', 'descripcion', 'imagen', 'archivo'])
+      const datos = request.only(['nombre_usuario', 'titulo', 'fecha_actividad', 'descripcion', 'imagen', 'archivo'])as any
+      datos.id_empresa = (request as any).empresaId
       const empresaId = (request as any).empresaId
       return blogService.crear(empresaId, datos)
     } catch (error) {
