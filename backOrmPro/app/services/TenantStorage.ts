@@ -1,23 +1,29 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import db from '@adonisjs/lucid/services/db'
 
-type TenantStore = { tenantId?: number }
-type TenantEmpresa = { empresaId?: number }
+type TenantContext = {
+  empresaId?: number
+  tenantId?: number
+}
 
 class TenantStorage {
-  private static storage = new AsyncLocalStorage<TenantStore>();
-  private static estorage = new AsyncLocalStorage<TenantEmpresa>();
+  private static storage = new AsyncLocalStorage<TenantContext>();
 
-  static run(tenantId: number, callback: () => void) {
-    TenantStorage.storage.run({ tenantId }, callback);
+
+  static run(context: TenantContext, callback: () => void) {
+    TenantStorage.storage.run(context, callback);
+  }
+
+  static getStore(): TenantContext | undefined {
+    return TenantStorage.storage.getStore();
   }
 
   private getEmpresaId(): number | null {
-  return TenantStorage.estorage.getStore()?.empresaId ?? null
+  return TenantStorage.storage.getStore()?.empresaId ?? null
 }
 
 static setEmpresaId(empreId: number) {
-     const store = TenantStorage.estorage.getStore();
+     const store = TenantStorage.storage.getStore();
     if (store) {
       store.empresaId = empreId;
     } else {

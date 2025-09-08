@@ -7,9 +7,9 @@ const blogService = new BlogService()
 class BlogController {
   async crearBlog({ request, response }: HttpContext) {
     try {
-      const datos = request.body()
-      const nueva = await blogService.crear(datos)
-      return response.json({ msj: 'publicacion creada', datos: nueva })
+      const datos = request.only(['nombre_usuario', 'titulo', 'fecha_actividad', 'descripcion', 'imagen', 'archivo'])
+      const empresaId = (request as any).empresaId
+      return blogService.crear(empresaId, datos)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -17,8 +17,8 @@ class BlogController {
 
   async listarBlog({ response }: HttpContext) {
     try {
-      const lista = await blogService.listar()
-      return response.json({ msj: 'listado de publicaciones', datos: lista })
+      const empresaId = (Request as any).empresaId
+      return blogService.listar(empresaId)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }

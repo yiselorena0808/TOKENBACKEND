@@ -2,14 +2,16 @@ import ListaChequeoService from '#services/ListaChequeoService'
 import { messages } from '@vinejs/vine/defaults'
 import type { HttpContext} from '@adonisjs/core/http'
 
-const listaChequeoService = new ListaChequeoService()
+
 
 class ListaChequeoController {
+private service = new ListaChequeoService()
+
   async crearLista({ request, response }: HttpContext) {
     try {
-      const datos = request.body()
-      const nueva = await listaChequeoService.crear(datos)
-      return response.json({ msj: 'lista creada', datos: nueva })
+      const datos = request.only(['id_usuario','usuario_nombre', 'fecha', 'hora', 'modelo', 'marca', 'soat', 'tecnico', 'kilometraje'])
+      const empresaId = (request as any).empresaId
+      return this.service.crear(empresaId, datos)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -17,8 +19,8 @@ class ListaChequeoController {
 
   async listarListas({ response }: HttpContext) {
     try {
-      const listas = await listaChequeoService.listar()
-      return response.json({ msj: 'listado', datos: listas })
+      const empresaId = (Request as any).empresaId
+      return this.service.listar(empresaId)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -26,9 +28,9 @@ class ListaChequeoController {
   async actualizarLista({request,response,params}: HttpContext) {
     try {
       const id = params.id
-      const datos = request.body()
-      const listaActualizada = await listaChequeoService.actualizar(id, datos)
-      return response.json({ msj: 'lista actualizada', datos: listaActualizada })
+      const datos = request.only(['id_usuario','usuario_nombre', 'fecha', 'hora', 'modelo', 'marca', 'soat', 'tecnico', 'kilometraje'])
+      const empresaId = (request as any).empresaId
+      return this.service.actualizar(id, empresaId,datos)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -36,8 +38,8 @@ class ListaChequeoController {
   async eliminarLista({ params, response }: HttpContext) {
     try {
       const id = params.id
-      await listaChequeoService.eliminar(id)
-      return response.json({ msj: 'lista eliminada' })
+      const empresaId = (Request as any).empresaId
+      return this.service.eliminar(id, empresaId)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }

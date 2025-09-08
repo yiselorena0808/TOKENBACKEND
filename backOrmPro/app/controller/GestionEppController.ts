@@ -7,17 +7,19 @@ const gestionService = new GestionService()
 class GestionController {
   async crearGestion({ request, response }: HttpContext) {
     try {
-      const datos = request.body()
-      const nueva = await gestionService.crear(datos)
+      const empresaId = (request as any).empresaId
+      const datos = request.only(['id_usuario', 'nombre', 'apellido', 'cedula', 'cargo', 'productos', 'cantidad', 'importancia', 'estado'])
+      const nueva = await gestionService.crear(datos, empresaId)
       return response.json({ msj: 'gestion creada', datos: nueva })
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
   }
 
-  async listarGestiones({ response }: HttpContext) {
+  async listarGestiones({ response, request }: HttpContext) {
     try {
-      const gestiones = await gestionService.listar()
+      const empresaId = (request as any).empresaId
+      const gestiones = await gestionService.listar(empresaId)
       return response.json({ msj: 'listado', datos: gestiones })
     } catch (error) {
       return response.json({ error: error.message, messages })
@@ -26,16 +28,19 @@ class GestionController {
 
   async actualizarEstado({ params, request, response }: HttpContext) {
     try {
-      const actualizado = await gestionService.actualizar(params.id, request.body())
+      const empresaId = (request as any).empresaId
+      const datos = request.body()
+      const actualizado = await gestionService.actualizar(params.id, datos, empresaId)
       return response.json({ msj: 'estado actualizado', datos: actualizado })
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
   }
 
-  async eliminarGestion({ params, response }: HttpContext) {
+  async eliminarGestion({ params, response, request }: HttpContext) {
     try {
-      const resp = await gestionService.eliminar(params.id)
+      const empresaId = (request as any).empresaId
+      const resp = await gestionService.eliminar(params.id, empresaId)
       return response.json({ msj: resp })
     } catch (error) {
       return response.json({ error: error.message })

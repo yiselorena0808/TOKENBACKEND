@@ -5,11 +5,13 @@ import type { HttpContext} from '@adonisjs/core/http'
 const reporteService = new ReporteService()
 
 class ReportesController {
+
+
   async crearReporte({ request, response }: HttpContext) {
     try {
-      const datos = request.body()
-      const nuevo = await reporteService.crear(datos)
-      return response.json({ msj: 'reporte creado', datos: nuevo })
+      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])
+      const empresaId = (request as any).empresaId
+      return reporteService.crear(empresaId, datos)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -17,8 +19,8 @@ class ReportesController {
 
   async listarReportes({ response }: HttpContext) {
     try {
-      const lista = await reporteService.listar()
-      return response.json({ msj: 'lista de reportes', datos: lista })
+      const empresaId = (Request as any).empresaId
+      return reporteService.listar(empresaId)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -26,8 +28,9 @@ class ReportesController {
 
   async listarReporteId({ params, response }: HttpContext) {
     try {
-      const uno = await reporteService.listarId(params.id)
-      return response.json({ msj: 'reporte encontrado', datos: uno })
+      const id = params.id
+      const empresaId = (Request as any).empresaId
+      return reporteService.listarId(id, empresaId) 
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -35,8 +38,10 @@ class ReportesController {
 
   async actualizarReporte({ params, request, response }: HttpContext) {
     try {
-      const actualizado = await reporteService.actualizar(params.id, request.body())
-      return response.json({ msj: 'reporte actualizado', datos: actualizado })
+      const id = params.id
+      const empresaId = (request as any).empresaId
+      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])
+      return reporteService.actualizar(id, empresaId, datos)
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
@@ -44,8 +49,9 @@ class ReportesController {
 
   async eliminarReporte({ params, response }: HttpContext) {
     try {
-      const resp = await reporteService.eliminar(params.id)
-      return response.json({ msj: resp })
+      const id = params.id
+      const empresaId = (Request as any).empresaId
+      return reporteService.eliminar(id, empresaId)
     } catch (error) {
       return response.json({ error: error.message })
     }

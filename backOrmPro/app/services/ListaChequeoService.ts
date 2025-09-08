@@ -1,38 +1,54 @@
 import ListaChequeo from '#models/lista_chequeo'
 
 class ListaChequeoService {
-  async crear(datos: any) {
-    return await ListaChequeo.create(datos)
+  async crear(empresaId: number, datos: any) {
+    const lista = await ListaChequeo.create({
+      ...datos,
+      id_empresa: empresaId,
+    })
+
+    return lista
   }
 
-  async listar() {
+  async listar(empresaId: number) {
+    return await ListaChequeo.query().where('id_empresa', empresaId)
+  }
+
+  async listarId(id: number, empresaId: number) {
     return await ListaChequeo.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .first()
   }
 
-  async listarId(id: number) {
-    return await ListaChequeo.query().where('id', id)
-  }
-
- async actualizar(id: number, datos: any) {
+ async actualizar(id: number, empresaId:number,datos: any) {
   const lista = await ListaChequeo.find(id) // busca por primary key
-  if (lista) {
+   if(!lista) {
+      return {error: 'lista no encontrada'}
+   }
+
+   if (empresaId && lista.id_empresa !== empresaId) {
+     return { error: 'No autorizado para actualizar esta lista' }
+   }
+
     lista.merge(datos)
     await lista.save()
     return lista
-  } else {
-    return { error: 'Lista no encontrada' }
-  }
 }
  
 
-  async eliminar(id: number) {
-    const lista = await ListaChequeo.findBy('id', id)
-    if (lista) {
-      await lista.delete()
-      return 'lista eliminada'
-    } else {
-      return 'lista no encontrada'
+  async eliminar(id: number, empresaId: number) {
+    const lista = await ListaChequeo.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .first()
+
+    if(!lista) {
+      return { error: 'Lista no encontrada o no autorizada' }
     }
+
+    await lista.delete()
+    return { mensaje: 'Lista eliminada correctamente'}
   }
 
   async conteo() {

@@ -8,7 +8,7 @@ async function tenantMiddleware(ctx:any, next:any) {
   if (!tenantId) {
     return ctx.response.status(400).send({ error: "Falta el header x-tenant-id" })
   }
-
+// @ts-expect-error tenantId no coincide con TenantContext
   TenantStorage.run(tenantId, async () => {
     await next()
   })

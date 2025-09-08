@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column} from '@adonisjs/lucid/orm'
 import type {BelongsTo} from '@adonisjs/lucid/types/relations'
 import Usuario from './usuario.js'
+import Empresa from './empresa.js'
+import Area from './area.js'
 
 export default class GestionEpp extends BaseModel {
    public static table = 'gestion_epp'
@@ -38,6 +40,12 @@ export default class GestionEpp extends BaseModel {
   @column()
   declare fecha_creacion: string
 
+  @column()
+  declare id_empresa: number
+
+  @column()
+  declare id_area: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -46,5 +54,11 @@ export default class GestionEpp extends BaseModel {
 
   @belongsTo(() => Usuario)
    declare usuario: BelongsTo<typeof Usuario>
+
+  @belongsTo(() => Empresa)
+  declare empresa: BelongsTo<typeof Empresa>
+
+   @belongsTo(() => Area)
+   declare area: BelongsTo<typeof Area>
   
 }

@@ -1,37 +1,54 @@
 import GestionEpp from '#models/gestion_epp'
 
 class GestionEppService {
-  async crear(datos: any) {
-    return await GestionEpp.create(datos)
+  async crear(datos: any, empresaId: number) {
+    return await GestionEpp.create({ ...datos, id_empresa:empresaId })
   }
 
-  async listar() {
+  async listar(empresaId: number) {
     return await GestionEpp.query()
+      .where('id_empresa', empresaId)
+      .preload('empresa')
+      .preload('area')
   }
 
-  async listarId(id: number) {
-    return await GestionEpp.query().where('id', id)
+  async listarId(id: number, empresaId: number) {
+    return await GestionEpp.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .preload('empresa')
+    .preload('area')
+    .first()
   }
 
-  async actualizar(id:any, datos: any) {
-    const gestion = await GestionEpp.findBy('id', id)
-    if (gestion) {
-      gestion.merge(datos)
-      await gestion.save()
-      return gestion
-    } else {
-      return { error: 'Gestión no encontrada' }
+  async actualizar(id:any, datos: any, empresaId: number) {
+    const gestion = await GestionEpp.query()
+      .where('id', id)
+      .andWhere('id_empresa', empresaId)
+      .first()
+
+      if(!gestion){
+        throw new Error('Gestión no encontrada')
+      }
+
+    gestion.merge(datos)
+    await gestion.save()
+    return
+    
+  }
+
+  async eliminar(id: any, empresaId: number) {
+    const gestion = await GestionEpp.query()
+      .where('id', id)
+      .andWhere('id_empresa', empresaId)
+      .first()
+
+    if (!gestion) {
+      throw new Error('Gestión no encontrada')
     }
-  }
 
-  async eliminar(id: any) {
-    const gestion = await GestionEpp.findBy('id', id)
-    if (gestion) {
-      await gestion.delete()
-      return 'gestión eliminada'
-    } else {
-      return 'gestión no encontrada'
-    }
+    await gestion.delete()
+    return { mensaje: 'Gestión eliminada'}
   }
 
   async conteo() {

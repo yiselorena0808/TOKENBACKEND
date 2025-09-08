@@ -4,6 +4,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 const usuarioService = new UsuarioService()
 
 export default class UsuarioController {
+  private service = new UsuarioService()
+
   async register({ request, response }: HttpContext) {
     const {
       id_empresa,
@@ -52,24 +54,43 @@ export default class UsuarioController {
   }
 
   async listarUsuarios({ response }: HttpContext) {
-    const usuarios = await usuarioService.listar()
-    return response.json(usuarios)
+    try {
+      const empresaId = (response as any).empresaId
+      return this.service.listar(empresaId)
+    } catch (error) {
+      return response.json({ error: error.message })
+    }
   }
 
   async listarUsuarioId({ params, response }: HttpContext) {
-    const usuario = await usuarioService.listarId(params.id)
+    try {
+    const empresaId = (response as any).empresaId
+    const usuario = await usuarioService.listarId(params.id, empresaId)
     return response.json(usuario)
+    } catch (error) {
+      return response.json({ error: error.message })
+    }
   }
 
   async actualizarUsuario({ params, request, response }: HttpContext) {
+    try {
     const datos = request.all()
-    const usuario = await usuarioService.actualizar(params.id, datos)
+    const empresaId = (response as any).empresaId
+    const usuario = await usuarioService.actualizar(params.id, datos, empresaId)
     return response.json(usuario)
+    } catch (error) {
+      return response.json({ error: error.message })
+    }
   }
 
   async eliminarUsuario({ params, response }: HttpContext) {
-    const resultado = await usuarioService.eliminar(params.id)
+    try {
+    const empresaId = (response as any).empresaId
+    const resultado = await usuarioService.eliminar(params.id, empresaId)
     return response.json(resultado)
+    } catch (error) {
+      return response.json({ error: error.message })
+    }
   }
 
   async conteoUsuarios({ response }: HttpContext) {

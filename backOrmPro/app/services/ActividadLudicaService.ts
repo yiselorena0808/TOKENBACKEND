@@ -1,37 +1,54 @@
 import ActividadLudica from '#models/actividad_ludica'
 
 class ActividadLudicaService {
-  async crear(datos: any) {
-    return await ActividadLudica.create(datos)
+  async crear(empresaId:number, datos:any) {
+     const actividad = await ActividadLudica.create({
+      ...datos,
+      id_empresa: empresaId,
+     })
+
+     return actividad
   }
 
-  async listar() {
-    return await ActividadLudica.query()
+  async listar(empresaId: number) {
+      return await ActividadLudica.query().where('id_empresa', empresaId)
   }
 
-  async listarId(id: any) {
-    return await ActividadLudica.query().where('id', id)
+  async listarId(id: number, empresaId: number) {
+   return await ActividadLudica.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .first()
   }
 
-  async actualizar(id:any, datos: any) {
-    const actividad = await ActividadLudica.findBy('id', id)
-    if (actividad) {
-      actividad.merge(datos)
-      await actividad.save()
-      return actividad
-    } else {
-      return { error: 'Actividad no encontrada' }
+  async actualizar(id:number, empresaId: number, datos: any) {
+  const actividad = await ActividadLudica.find(id)
+    if(!actividad){
+      return {error: 'actividad no encontrada'}
     }
+
+    if (empresaId && actividad.id_empresa !== empresaId) {
+      return { error: 'No autorizado para actualizar esta actividad' }
+    }
+
+    actividad.merge(datos)
+    await actividad.save()
+    return actividad
   }
 
-  async eliminar(id: any) {
-    const actividad = await ActividadLudica.findBy('id', id)
-    if (actividad) {
-      await actividad.delete()
-      return 'actividad eliminada'
-    } else {
-      return 'actividad no encontrada'
+  async eliminar(id: number, empresaId: number) {
+    const actividad = await ActividadLudica.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .first()
+
+    if (!actividad) {
+      return { error: 'Actividad no encontrada o no autorizada' }
     }
+
+    await actividad.delete()
+    return { mensaje: 'Actividad eliminada correctamente' }
+  
   }
 
   async conteo() {

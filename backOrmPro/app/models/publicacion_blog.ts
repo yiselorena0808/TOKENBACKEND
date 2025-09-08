@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import Usuario from './usuario.js'
+import Empresa from './empresa.js'
 import type {BelongsTo} from '@adonisjs/lucid/types/relations'
 
 export default class PublicacionBlog extends BaseModel {
@@ -18,7 +19,7 @@ export default class PublicacionBlog extends BaseModel {
   declare titulo: string
 
    @column()
-  declare fecha_Actividad: Date
+  declare fecha_actividad: Date
 
   @column()
   declare descripcion: string
@@ -29,6 +30,9 @@ export default class PublicacionBlog extends BaseModel {
   @column()
   declare archivo: string
 
+  @column()
+  declare id_empresa: number
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -37,5 +41,8 @@ export default class PublicacionBlog extends BaseModel {
 
   @belongsTo(() => Usuario)
   declare usuario: BelongsTo<typeof Usuario>
+
+  @belongsTo(() => Empresa)
+  declare empresa: BelongsTo<typeof Empresa>
 }
 

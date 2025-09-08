@@ -79,26 +79,39 @@ class UsuarioService {
     return { mensaje: 'Login correcto', token, user }
   }
 
-  async listar() {
-    return await Usuario.query().preload('empresa').preload('area')
+  async listar(empresaId: number) {
+    return await Usuario.query()
+    .where('id_empresa', empresaId)
+    .preload('empresa')
+    .preload('area')
   }
 
-  async listarId(id: number) {
-    return await Usuario.query().where('id', id).preload('empresa').preload('area').first()
+  async listarId(id: number, empresaId: number) {
+    return await Usuario.query()
+    .where('id', id)
+    .andWhere('id_empresa', empresaId)
+    .preload('empresa').preload('area')
+    .first()
   }
 
-  async actualizar(id: number, datos: Partial<Usuario>) {
-    const usuario = await Usuario.find(id)
-    if (!usuario) return { error: 'Usuario no encontrado' }
+  async actualizar(id: number, datos: Partial<Usuario>, empresaId: number) {
+    const usuario = await Usuario.query()
+      .where('id', id)
+      .andWhere('id_empresa', empresaId)
+      .first()
+    if (!usuario) return { error: 'Usuario no encontrado o autorizado' }
 
     usuario.merge(datos)
     await usuario.save()
-    return await Usuario.query().where('id', id).preload('empresa').preload('area').first()
+    return await usuario
   }
 
-  async eliminar(id: number) {
-    const usuario = await Usuario.find(id)
-    if (!usuario) return { mensaje: 'Usuario no encontrado' }
+  async eliminar(id: number, empresaId: number) {
+    const usuario = await Usuario.query()
+      .where('id', id)
+      .andWhere('id_empresa', empresaId)
+      .first()
+    if (!usuario) return { mensaje: 'Usuario no encontrado o autorizado' }
 
     await usuario.delete()
     return { mensaje: 'Usuario eliminado' }
