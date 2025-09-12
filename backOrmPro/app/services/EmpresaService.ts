@@ -1,46 +1,50 @@
-import Empresa from "../models/empresa.js";
+import Empresa from '#models/empresa'
 
-class EmpresaService {
+export default class EmpresaService {
+  
+  // Crear empresa
   async crear(datos: any) {
-    return await Empresa.create(datos);
+    return Empresa.create(datos)
   }
 
-  async listar() {
-    return await Empresa.query();
+  // Listar solo empresas activas con id y nombre
+  async listarNombresActivas() {
+    const empresas = await Empresa.query()
+      .select('id_empresa', 'nombre')
+      .where('estado', true)
+    return empresas || []
   }
 
+  // Opcional: listar empresas inactivas
+  async listarInactivas() {
+    const empresas = await Empresa.query()
+      .select('id_empresa', 'nombre')
+      .where('estado', false)
+    return empresas || []
+  }
+
+  // Listar por ID
   async listarId(id: number) {
-    return await Empresa.query().where("id", id);
+    return Empresa.find(id)
   }
 
-  async actualizar(id: any, datos: any) {
-    const empresa = await Empresa.findBy("id", id);
-    if (empresa) {
-      empresa.merge(datos);
-      await empresa.save();
-      return empresa;
-    } else {
-      return { error: "Empresa no encontrada" };
-    }
+  // Actualizar empresa
+  async actualizar(id: number, datos: any) {
+    const empresa = await Empresa.findOrFail(id)
+    empresa.merge(datos)
+    await empresa.save()
+    return empresa
   }
 
-  async eliminar(id: any) {
-    const empresa = await Empresa.findBy("id_empresa", id);
-    if (empresa) {
-      await empresa.delete();
-      return "Empresa eliminada";
-    } else {
-      return "Empresa no encontrada";
-    }
+  // Eliminar empresa
+  async eliminar(id: number) {
+    const empresa = await Empresa.findOrFail(id)
+    await empresa.delete()
+    return 'Empresa eliminada'
   }
 
+  // Conteo de empresas
   async conteo() {
-    const empresas = await Empresa.query();
-    return {
-      total: empresas.length,
-      empresas,
-    };
+    return Empresa.query().count('* as total')
   }
 }
-
-export default EmpresaService;

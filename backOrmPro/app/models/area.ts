@@ -6,15 +6,15 @@ import { DateTime } from 'luxon'
 import Empresa from './empresa.js'
 
 export default class Area extends BaseModel {
- public static table = 'area'
+  public static table = 'area'
 
   @column({ isPrimary: true })
   declare id_area: number
-  
-   @column()
+
+  @column({ columnName: 'nombre' })
   declare nombre_area: string
 
-  @column()
+  @column({ columnName: 'codigo' })
   declare codigo_area: string
 
   @column()
@@ -32,20 +32,19 @@ export default class Area extends BaseModel {
   @column()
   declare alias: string | null
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, columnName: 'created_at' })
   declare createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'updated_at' })
   declare updatedAt: DateTime
 
   @hasMany(() => Usuario, {
-    foreignKey: 'id_area'
+    foreignKey: 'id_area',
   })
-    declare usuarios: HasMany<typeof Usuario>
+  declare usuarios: HasMany<typeof Usuario>
 
   @belongsTo(() => Empresa, {
     foreignKey: 'id_empresa',
   })
-    declare empresa: BelongsTo<typeof Empresa>
-
+  declare empresa: BelongsTo<typeof Empresa>
 }

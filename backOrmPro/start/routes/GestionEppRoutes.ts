@@ -1,19 +1,26 @@
-import Route from "@adonisjs/core/services/router"
-import GestionController from "../../app/controller/GestionEppController.js"
-import areaMiddleware from "../../app/middleware/AreaMiddleware.js"
+import Route from '@adonisjs/core/services/router'
+import CargosController from '#controller/CargosController'
 
-//import AuthJwt from "../../app/middleware/auth_jwt.js"
+// Ruta pública: listar cargos
+Route.get('/listarCargos', 'CargosController.listarCargos')
+// Ruta privada: crear cargo
+Route.post('/crearCargo', 'CargosController.crearCargo')
 
-const gestion = new GestionController()
-//const authJwt = new AuthJwt()
+// Ruta privada: actualizar cargo
+Route.put('/actualizarCargo/:id', 'CargosController.actualizarCargo')
 
+// Ruta privada: eliminar cargo
+Route.delete('/eliminarCargo/:id', 'CargosController.eliminarCargo')
 
-Route.group(() => {
-Route.post('/crearGestion', gestion.crearGestion)//.use(authJwt.handle.bind(authJwt))
-Route.get('/listarGestiones', gestion.listarGestiones)//.use(authJwt.handle.bind(authJwt))
-Route.put('/actualizarEstadoGestion/:id', gestion.actualizarEstado)//.use(authJwt.handle.bind(authJwt))
-Route.delete('/eliminarGestion/:id', gestion.eliminarGestion)//.use(authJwt.handle.bind(authJwt))
-}).middleware([  async (ctx, next) => {
-    const m = new areaMiddleware()
-    return m.handle(ctx, next)
-  }])
+// Nota: middleware se puede aplicar a nivel de controlador o ruta
+// Ruta privada: listar cargos activos
+Route.get('/listarCargosActivos', 'CargosController.listarCargosActivos')
+
+// Ruta privada: listar cargos inactivos
+Route.get('/listarCargosInactivos', 'CargosController.listarCargosInactivos')
+
+// Ruta privada: listar cargo por ID
+Route.get('/listarCargo/:id', 'CargosController.listarCargo')
+
+// Ruta privada: conteo de cargos
+Route.get('/conteoCargos', 'CargosController.conteoCargos')

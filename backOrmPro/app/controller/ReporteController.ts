@@ -1,69 +1,108 @@
 import ReporteService from '#services/ReporteService'
 import { messages } from '@vinejs/vine/defaults'
-import type { HttpContext} from '@adonisjs/core/http'
+import type { HttpContext } from '@adonisjs/core/http'
 
 const reporteService = new ReporteService()
 
 class ReportesController {
-
-
+  // Crear un reporte asignado a la empresa del usuario logueado
   async crearReporte({ request, response }: HttpContext) {
     try {
-      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])as any
-      datos.id_empresa = (request as any).empresaId
-      const empresaId = (request as any).empresaId
-      return reporteService.crear(empresaId, datos)
+      const user = (request as any).authUsuario
+      if (!user || !user.idEmpresa) {
+        return response.unauthorized({ error: 'Usuario no tiene empresa asociada' })
+      }
+
+      const datos = request.only([
+        'nombre_usuario',
+        'cargo',
+        'cedula',
+        'fecha',
+        'lugar',
+        'descripcion',
+        'imagen',
+        'archivos',
+        'estado',
+      ]) as any
+
+      datos.id_empresa = user.idEmpresa
+      datos.id_usuario = user.id
+
+      const reporteCreado = await reporteService.crear(user.idEmpresa, datos)
+      return response.status(201).json({ mensaje: 'Reporte creado', datos: reporteCreado })
     } catch (error) {
-      return response.json({ error: error.message, messages })
+      return response.status(500).json({ error: error.message, messages })
     }
   }
 
-  async listarReportes({ response }: HttpContext) {
+  // Listar solo los reportes de la empresa del usuario logueado
+  async listarReportes({ request, response }: HttpContext) {
     try {
-      const empresaId = (Request as any).empresaId
-      return reporteService.listar(empresaId)
+      const user = (request as any).authUsuario
+      if (!user || !user.idEmpresa) {
+        return response.unauthorized({ error: 'Usuario no tiene empresa asociada' })
+      }
+
+      const reportes = await reporteService.listar(user.idEmpresa)
+      return response.json({ datos: reportes })
     } catch (error) {
-      return response.json({ error: error.message, messages })
+      return response.status(500).json({ error: error.message, messages })
     }
   }
 
+  // Obtener detalle por ID (solo de la misma empresa)
   async listarReporteId({ params, response }: HttpContext) {
     try {
-      const id = params.id
-      const empresaId = (Request as any).empresaId
-      return reporteService.listarId(id, empresaId) 
+      const user = (params as any).authUsuario
+      if (!user || !user.idEmpresa) {
+        return response.unauthorized({ error: 'Usuario no tiene empresa asociada' })
+      }
+
+      const reporte = await reporteService.listarId(params.id, user.idEmpresa)
+      return response.json({ datos: reporte })
     } catch (error) {
-      return response.json({ error: error.message, messages })
+      return response.status(500).json({ error: error.message, messages })
     }
   }
 
+  // Actualizar un reporte
   async actualizarReporte({ params, request, response }: HttpContext) {
     try {
-      const id = params.id
-      const empresaId = (request as any).empresaId
-      const datos = request.only(['nombre_usuario', 'cargo', 'cedula', 'fecha', 'lugar', 'descripcion', 'imagen', 'archivos'])
-      return reporteService.actualizar(id, empresaId, datos)
+      const user = (request as any).authUsuario
+      if (!user || !user.idEmpresa) {
+        return response.unauthorized({ error: 'Usuario no tiene empresa asociada' })
+      }
+
+      const datos = request.only([
+        'nombre_usuario',
+        'cargo',
+        'cedula',
+        'fecha',
+        'lugar',
+        'descripcion',
+        'imagen',
+        'archivos',
+        'estado',
+      ])
+      const reporteActualizado = await reporteService.actualizar(params.id, user.idEmpresa, datos)
+      return response.json({ mensaje: 'Reporte actualizado', datos: reporteActualizado })
     } catch (error) {
-      return response.json({ error: error.message, messages })
+      return response.status(500).json({ error: error.message, messages })
     }
   }
 
-  async eliminarReporte({ params, response }: HttpContext) {
+  // Eliminar un reporte
+  async eliminarReporte({ params, request, response }: HttpContext) {
     try {
-      const id = params.id
-      const empresaId = (Request as any).empresaId
-      return reporteService.eliminar(id, empresaId)
-    } catch (error) {
-      return response.json({ error: error.message })
-    }
-  }
+      const user = (request as any).authUsuario
+      if (!user || !user.idEmpresa) {
+        return response.unauthorized({ error: 'Usuario no tiene empresa asociada' })
+      }
 
-  async conteoReportes({ response }:  HttpContext) {
-    try {
-      const resultado = await reporteService.conteo()
-      return response.json({ msj: 'conteo realizado', datos: resultado })
+      await reporteService.eliminar(params.id, user.idEmpresa)
+      return response.json({ mensaje: 'Reporte eliminado' })
     } catch (error) {
-      return response.json({ error: error.message })
+      return response.status(500).json({ error: error.message })
     }
   }
 }

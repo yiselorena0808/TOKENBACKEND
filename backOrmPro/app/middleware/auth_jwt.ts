@@ -1,24 +1,37 @@
-/*import Jwt from 'jsonwebtoken';
-import type { HttpContext} from '@adonisjs/core/http'
+import type { HttpContext } from '@adonisjs/core/http'
+import Jwt from 'jsonwebtoken'
 
-const SECRET=process.env.jwt_secret || 'sstrict';
-export default class AuthJwt{
-    async handle({request,response}: HttpContext, next:any){
-        const authheader = request.header('Authorization');
-        if (!authheader) {
-  throw new Error('Authorization header missing')
-}
-        const token = authheader.replace('Bearer', '').trim()
-        if (!token){
-            return response.unauthorized({message:"Falta un token"})
-        } else {
-            try {
-                const jwtcoded = Jwt.verify(token, SECRET)
-                request.updateBody({authUsuario: jwtcoded})
-                await next()
-            } catch (error) {
-                return response.unauthorized({message:"Token invalido"})
-            }
-        }
+const SECRET = process.env.JWT_SECRET || 'sstrict'
+
+export default class AuthJwtMiddleware {
+  public async handle({ request, response }: HttpContext, next: () => Promise<void>) {
+    const authHeader = request.header('Authorization')
+
+    if (!authHeader) {
+      return response.unauthorized({ error: 'Falta el token' })
     }
-}*/
+
+    try {
+      const token = authHeader.replace('Bearer ', '').trim()
+      const decoded = Jwt.verify(token, SECRET) as any
+
+      const id = decoded.id
+      const id_empresa = decoded.id_empresa ?? decoded.idEmpresa
+
+      if (!id || !id_empresa) {
+        return response.unauthorized({ error: 'Token inválido o incompleto' })
+      }
+
+      ;(request as any).user = {
+        id,
+        correoElectronico: decoded.correoElectronico,
+        id_empresa,
+        nombre: decoded.nombre, // ✅ ahora sí usamos nombre real
+      }
+
+      await next()
+    } catch (error) {
+      return response.unauthorized({ error: 'Token inválido' })
+    }
+  }
+}

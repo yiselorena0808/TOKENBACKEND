@@ -1,13 +1,15 @@
-import EmpresaController from '../../app/controller/EmpresaController.js'
 import Route from "@adonisjs/core/services/router"
-//import AuthJwt from "../../app/middleware/auth_jwt.js"
 
-const empresaController = new EmpresaController()
-//const authJwt = new AuthJwt()
+// Controller
+// Nota: path absoluto desde App/, sin extensión
+import EmpresaController from '../../app/controller/EmpresaController.js'
 
-Route.post('/crearEmpresa', empresaController.crearEmpresa)//.use(authJwt.handle.bind(authJwt))
-Route.get('/listarEmpresas', empresaController.listarEmpresas)//.use(authJwt.handle.bind(authJwt))
-Route.get('/idEmpresa/:id', empresaController.listarEmpresaId)//.use(authJwt.handle.bind(authJwt))
-Route.delete('/eliminarEmpresa/:id', empresaController.eliminarEmpresa)//.use(authJwt.handle.bind(authJwt))
-Route.put('/actualizarEmpresa/:id', empresaController.actualizarEmpresa)//.use(authJwt.handle.bind(authJwt))
-Route.get('/conteoEmpresas', empresaController.conteoEmpresas)//.use(authJwt.handle.bind(authJwt))
+// Middleware
+import EmpresaMiddleware from '#middleware/EmpresaMildeware'
+
+// Ruta pública: listar empresas
+Route.get('/listarEmpresas', 'EmpresaController.listarEmpresas')
+
+// Ruta privada: crear empresa
+Route.post('/crearEmpresa', 'EmpresaController.crearEmpresa')
+  .middleware([EmpresaMiddleware])
