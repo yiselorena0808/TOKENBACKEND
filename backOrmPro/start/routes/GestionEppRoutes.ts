@@ -1,26 +1,13 @@
 import Route from '@adonisjs/core/services/router'
-import CargosController from '#controller/CargosController'
+import GestionEppController from '../../app/controller/GestionEppController.js'
+import AuthJwt from "../../app/middleware/auth_jwt.js"
 
-// Ruta pública: listar cargos
-Route.get('/listarCargos', 'CargosController.listarCargos')
-// Ruta privada: crear cargo
-Route.post('/crearCargo', 'CargosController.crearCargo')
+const gestionEppController = new GestionEppController()
 
-// Ruta privada: actualizar cargo
-Route.put('/actualizarCargo/:id', 'CargosController.actualizarCargo')
+const authJwt= new AuthJwt()
 
-// Ruta privada: eliminar cargo
-Route.delete('/eliminarCargo/:id', 'CargosController.eliminarCargo')
-
-// Nota: middleware se puede aplicar a nivel de controlador o ruta
-// Ruta privada: listar cargos activos
-Route.get('/listarCargosActivos', 'CargosController.listarCargosActivos')
-
-// Ruta privada: listar cargos inactivos
-Route.get('/listarCargosInactivos', 'CargosController.listarCargosInactivos')
-
-// Ruta privada: listar cargo por ID
-Route.get('/listarCargo/:id', 'CargosController.listarCargo')
-
-// Ruta privada: conteo de cargos
-Route.get('/conteoCargos', 'CargosController.conteoCargos')
+Route.post('/crearGestionEpp', gestionEppController.crear).use(authJwt.handle.bind(authJwt))
+Route.get('/listarGestiones', gestionEppController.listar).use(authJwt.handle.bind(authJwt))
+Route.get('/mostrarGestion/:id', gestionEppController.mostrar).use(authJwt.handle.bind(authJwt))
+Route.put('/actualizarGestion/:id', gestionEppController.actualizar).use(authJwt.handle.bind(authJwt))
+Route.delete('/eliminarGestion/:id', gestionEppController.eliminar).use(authJwt.handle.bind(authJwt))
