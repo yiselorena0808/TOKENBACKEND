@@ -1,10 +1,10 @@
 // app/Controllers/Http/DashboardController.ts
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContext } from '@adonisjs/core/http'
 import Reporte from '#models/reporte'
 import Usuario from '#models/usuario'
 
 export default class DashboardController {
-  public async funcionalidades({ request, response }: HttpContextContract) {
+  public async funcionalidades({ request, response }: HttpContext) {
     try {
       const usuario = (request as any).user
       if (!usuario) return response.status(401).json({ error: 'Usuario no autenticado' })
